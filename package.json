@@ -1,0 +1,28 @@
+{
+  "name": "nodejs-01",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js",
+    "dev": "nodemon ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xfingerling/nodejs-01.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xfingerling/nodejs-01/issues"
+  },
+  "homepage": "https://github.com/xfingerling/nodejs-01#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "uniqid": "^5.2.0",
+    "yargs": "^15.4.1"
+  }
+}

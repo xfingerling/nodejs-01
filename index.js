@@ -16,7 +16,7 @@ const {
 const server = express();
 
 server.use(morgan("dev"));
-server.use(cors());
+server.use(cors({ origin: "http://localhost:3000" }));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 

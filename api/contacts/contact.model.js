@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const contactSchema = new Schema({
   name: { type: String, required: true },
@@ -8,6 +9,8 @@ const contactSchema = new Schema({
   subscription: { type: String, required: true },
   password: { type: String, required: true },
 });
+
+contactSchema.plugin(mongoosePaginate);
 
 const contactModel = mongoose.model("Contact", contactSchema);
 

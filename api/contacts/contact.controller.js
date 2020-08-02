@@ -15,11 +15,26 @@ class ContactController {
     }
   }
 
-  async getContacts(req, res, nex) {
+  async getContacts(req, res, next) {
     try {
-      const contacts = await contactModel.find();
+      const { sub, page, limit } = req.query;
 
-      return res.status(200).json(contacts);
+      const optionsPaginate = {
+        page: page || 1,
+        limit: limit || 10,
+      };
+
+      let contacts;
+      if (sub) {
+        contacts = await contactModel.paginate(
+          { subscription: sub },
+          optionsPaginate
+        );
+      } else {
+        contacts = await contactModel.paginate({}, optionsPaginate);
+      }
+
+      return res.status(200).json(contacts.docs);
     } catch (err) {
       next(err);
     }

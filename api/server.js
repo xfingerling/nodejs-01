@@ -7,7 +7,6 @@ const authRouter = require("./auth/auth.router");
 
 require("dotenv").config();
 mongoose.set("useCreateIndex", true);
-// mongoose.set("debug", true);
 
 module.exports = class MyServer {
   constructor() {
@@ -39,18 +38,17 @@ module.exports = class MyServer {
   }
 
   async initDatabase() {
-    await mongoose.connect(
-      process.env.MONGODB_URL,
-      {
+    try {
+      await mongoose.connect(process.env.MONGODB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-      },
-      (err) => {
-        if (err) process.exit(1);
-
-        console.log("Database connection successful");
-      }
-    );
+        useFindAndModify: false,
+      });
+      console.log("Database is connect");
+    } catch (error) {
+      console.log("Database connection successful");
+      process.exit(1);
+    }
   }
 
   startListening() {

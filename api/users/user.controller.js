@@ -9,7 +9,7 @@ class UserController {
     try {
       const users = await userModel.find();
 
-      res.status(200).json(users);
+      res.json(users);
     } catch (err) {
       next(err);
     }
@@ -19,7 +19,7 @@ class UserController {
     try {
       const { email, subscription } = req.user;
 
-      res.status(200).json({ email, subscription });
+      res.json({ email, subscription });
     } catch (err) {
       next(err);
     }
@@ -34,10 +34,10 @@ class UserController {
         {
           $set: { subscription },
         },
-        { new: true, useFindAndModify: false }
+        { new: true }
       );
 
-      res.status(200).json(updateUser);
+      res.json(updateUser);
     } catch (err) {
       next(err);
     }

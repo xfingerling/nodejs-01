@@ -40,7 +40,7 @@ class AuthController {
       const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       await userModel.findByIdAndUpdate(user._id, { token });
 
-      return res.status(200).json({
+      return res.json({
         token,
         user: { email: user.email, subscription: user.subscription },
       });

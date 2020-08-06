@@ -34,7 +34,7 @@ class ContactController {
         contacts = await contactModel.paginate({}, optionsPaginate);
       }
 
-      return res.status(200).json(contacts.docs);
+      return res.json(contacts.docs);
     } catch (err) {
       next(err);
     }
@@ -50,7 +50,7 @@ class ContactController {
         return res.status(404).send();
       }
 
-      return res.status(200).json(contact);
+      return res.json(contact);
     } catch (err) {
       next(err);
     }
@@ -88,7 +88,7 @@ class ContactController {
         return res.status(404).send();
       }
 
-      return res.status(200).json(updateContact);
+      return res.json(updateContact);
     } catch (err) {
       next(err);
     }

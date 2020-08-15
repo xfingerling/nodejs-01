@@ -3,6 +3,7 @@ const {
   Types: { ObjectId },
 } = require("mongoose");
 const userModel = require("./user.model");
+const path = require("path");
 
 class UserController {
   async getUsers(req, res, next) {
@@ -38,6 +39,28 @@ class UserController {
       );
 
       res.json(updateUser);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateAvatar(req, res, next) {
+    try {
+      const avatar = req.file;
+      const staticUrl = path.join(
+        `localhost:${process.env.PORT}/images/${avatar.filename}`
+      );
+
+      const { _id } = req.user;
+      await userModel.findByIdAndUpdate(
+        _id,
+        {
+          $set: { avatarURL: staticUrl },
+        },
+        { new: true }
+      );
+
+      res.json({ avatarURL: staticUrl });
     } catch (err) {
       next(err);
     }

@@ -27,6 +27,7 @@ module.exports = class MyServer {
 
   initMiddlewares() {
     this.server.use(morgan("dev"));
+    this.server.use(express.static("public"));
     this.server.use(express.json());
     this.server.use(express.urlencoded({ extended: true }));
   }

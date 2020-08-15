@@ -1,7 +1,7 @@
-const Joi = require("@hapi/joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userModel = require("../users/user.model");
+const generateAvatar = require("../helpers/avatarGenerator");
 
 class AuthController {
   async registrationUser(req, res, next) {
@@ -10,11 +10,18 @@ class AuthController {
 
       const passwordHash = await bcrypt.hash(password, 10);
 
-      const user = await userModel.create({ email, password: passwordHash });
+      const staticAvatarURL = await generateAvatar();
+
+      const user = await userModel.create({
+        email,
+        password: passwordHash,
+        avatarURL: staticAvatarURL,
+      });
 
       return res.status(201).json({
         _id: user._id,
         email: user.email,
+        avatarURL: user.avatarURL,
         subscription: user.subscription,
         __v: user.__v,
       });

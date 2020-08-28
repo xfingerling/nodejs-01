@@ -60,7 +60,7 @@ class UserController {
         { new: true }
       );
 
-      res.json({ avatarURL: staticUrl });
+      return res.json({ avatarURL: staticUrl });
     } catch (err) {
       next(err);
     }

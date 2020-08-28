@@ -10,18 +10,18 @@ class AuthController {
 
       const passwordHash = await bcrypt.hash(password, 10);
 
-      const staticAvatarURL = await generateAvatar();
+      // const staticAvatarURL = await generateAvatar();
 
       const user = await userModel.create({
         email,
         password: passwordHash,
-        avatarURL: staticAvatarURL,
+        // avatarURL: staticAvatarURL,
       });
 
       return res.status(201).json({
         _id: user._id,
         email: user.email,
-        avatarURL: user.avatarURL,
+        // avatarURL: user.avatarURL,
         subscription: user.subscription,
         __v: user.__v,
       });
@@ -76,12 +76,12 @@ class AuthController {
       try {
         userId = await jwt.verify(token, process.env.JWT_SECRET).id;
       } catch (err) {
-        res.status(401).json({ message: "Not authorized" });
+        return res.status(401).json({ message: "Not authorized" });
       }
 
       const user = await userModel.findById(userId);
       if (!user || user.token !== token) {
-        res.status(401).json({ message: "Not authorized" });
+        return res.status(401).json({ message: "Not authorized" });
       }
 
       req.user = user;

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -5,7 +7,6 @@ const contactRouter = require("./contacts/contact.router");
 const userRouter = require("./users/user.router");
 const authRouter = require("./auth/auth.router");
 
-require("dotenv").config();
 mongoose.set("useCreateIndex", true);
 
 module.exports = class MyServer {
@@ -33,9 +34,9 @@ module.exports = class MyServer {
   }
 
   initRouters() {
-    this.server.use("/api/contacts", contactRouter);
-    this.server.use("/api/auth", authRouter);
-    this.server.use("/api/users", userRouter);
+    this.server.use("/contacts", contactRouter);
+    this.server.use("/auth", authRouter);
+    this.server.use("/users", userRouter);
   }
 
   async initDatabase() {

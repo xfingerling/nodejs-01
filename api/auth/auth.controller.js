@@ -1,7 +1,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sgMail = require("@sendgrid/mail");
+const uuid = require("uuid");
 const userModel = require("../users/user.model");
 const generateAvatar = require("../helpers/avatarGenerator");
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 class AuthController {
   async registrationUser(req, res, next) {
@@ -17,6 +21,24 @@ class AuthController {
         password: passwordHash,
         // avatarURL: staticAvatarURL,
       });
+
+      const verificationToken = uuid.v4();
+
+      await userModel.findByIdAndUpdate(
+        user._id,
+        { verificationToken },
+        { new: true }
+      );
+
+      const msg = {
+        to: user.email,
+        from: "oleggenius@hotmail.com",
+        subject: "Email Verification",
+        text: "and easy to do anywhere, even with Node.js",
+        html: `<a href='localhost:3000/auth/verify/${verificationToken}'>Click to verify</a>`,
+      };
+      console.log(verificationToken);
+      sgMail.send(msg);
 
       return res.status(201).json({
         _id: user._id,
@@ -35,7 +57,7 @@ class AuthController {
       const { email, password } = req.body;
 
       const user = await userModel.findOne({ email });
-      if (!user) {
+      if (!user || user.status !== "Verified") {
         return res.status(401).send("Email or password is wrong");
       }
 
@@ -93,6 +115,27 @@ class AuthController {
     }
   }
 
+  async verifyEmail(req, res, next) {
+    try {
+      const { verificationToken } = req.params;
+
+      const userToVerify = await userModel.findOne({ verificationToken });
+      if (!userToVerify) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      await userModel.findByIdAndUpdate(
+        userToVerify._id,
+        { status: "Verified", verificationToken: null },
+        { new: true }
+      );
+
+      return res.send("Successfully");
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async validateUniqueEmail(req, res, next) {
     const isUniqueUserEmail = await userModel.findOne({
       email: req.body.email,
@@ -103,6 +146,26 @@ class AuthController {
     }
 
     next();
+  }
+
+  async sendVerificationEmail(user) {
+    const verificationToken = uuid.v4();
+
+    await userModel.findByIdAndUpdate(
+      used._id,
+      { verificationToken },
+      { new: true }
+    );
+
+    const msg = {
+      to: user.email,
+      from: "oleggenius@hotmail.com",
+      subject: "Email Verification",
+      text: "and easy to do anywhere, even with Node.js",
+      html: `<a href='http://localhost:3000/auth/verify/${verificationToken}'>Click to verify</a>`,
+    };
+
+    sgMail.send(msg);
   }
 }
 
